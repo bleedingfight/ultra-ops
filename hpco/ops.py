@@ -73,7 +73,3 @@ def myadd_out(a: Tensor, b: Tensor, out: Tensor) -> None:
 def _(a):
     torch._check(a.dtype == torch.float)
     return torch.empty_like(a)
-
-
-def elu(a: Tensor) -> Tensor:
-    return torch.ops.hpco.elu.default(a)

@@ -51,7 +51,7 @@ def get_extensions():
 
     this_dir = os.path.dirname(os.path.curdir)
     extensions_dir = os.path.join(this_dir, library_name, "csrc")
-    sources = list(glob.glob(os.path.join(extensions_dir, "*.cpp")))
+    sources = list(glob.glob(os.path.join(extensions_dir, "*.cc")))
 
     extensions_cuda_dir = os.path.join(extensions_dir, "cuda")
     cuda_sources = list(glob.glob(os.path.join(extensions_cuda_dir, "*.cu")))
