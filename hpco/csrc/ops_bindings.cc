@@ -1,10 +1,5 @@
-#include "binary_ops.h"
-#include <ATen/Operators.h>
-#include <Python.h>
-#include <torch/all.h>
-#include <torch/library.h>
-#include <vector>
-
+#include "binary_ops_cpu.h"
+#include "unary_ops_cpu.h"
 extern "C" {
 /* Creates a dummy empty _C module that can be imported from Python.
    The import from Python will load the .so consisting of this file
@@ -26,12 +21,18 @@ PyObject *PyInit__C(void) {
 namespace hpco {
 // Defines the operators
 TORCH_LIBRARY(hpco, m) {
+    m.def("mymuladd(Tensor a, Tensor b, float c) -> Tensor");
+    m.def("mymul(Tensor a, Tensor b) -> Tensor");
+    m.def("myadd_out(Tensor a, Tensor b, Tensor(a!) out) -> ()");
     m.def("elu(Tensor a) -> Tensor");
     m.def("elu_out(Tensor a, Tensor(a!) out) -> ()");
 }
 
 // Registers CPU implementations for mymuladd, mymul, myadd_out
 TORCH_LIBRARY_IMPL(hpco, CPU, m) {
+    m.impl("mymuladd", &mymuladd_cpu);
+    m.impl("mymul", &mymul_cpu);
+    m.impl("myadd_out", &myadd_out_cpu);
     m.impl("elu", &elu_cpu);
     m.impl("elu_out", &elu_out_cpu);
 }

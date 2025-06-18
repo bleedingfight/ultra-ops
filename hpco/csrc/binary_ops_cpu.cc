@@ -1,4 +1,4 @@
-#include "binary_ops.h"
+#include "binary_ops_cpu.h"
 namespace hpco {
 
 at::Tensor mymuladd_cpu(const at::Tensor &a, const at::Tensor &b, double c) {

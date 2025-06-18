@@ -30,7 +30,6 @@ class TestMyMulAdd(TestCase):
     def _test_correctness(self, device):
         samples = self.sample_inputs(device)
         for args in samples:
-            breakpoint()
             result = hpco.ops.mymuladd(*args)
             expected = reference_muladd(*args)
             torch.testing.assert_close(result, expected)
@@ -106,6 +105,41 @@ class TestMyAddOut(TestCase):
         samples.extend(self.sample_inputs(device, requires_grad=False))
         for args in samples:
             opcheck(torch.ops.hpco.myadd_out.default, args)
+
+    def test_opcheck_cpu(self):
+        self._opcheck("cpu")
+
+    @unittest.skipIf(not torch.cuda.is_available(), "requires cuda")
+    def test_opcheck_cuda(self):
+        self._opcheck("cuda")
+
+
+class TestElu(TestCase):
+    def sample_inputs(self, size, device="cuda", requires_grad=False):
+        def make_tensor(*size):
+            return torch.randn(size, device=device, requires_grad=requires_grad)
+
+        in_data = make_tensor(size)
+        truth = torch.nn.ELU()(in_data)
+
+        return [in_data, truth]
+
+    def test_correctness(self, device="cuda"):
+        samples = self.sample_inputs(10, device)
+        out = hpco.ops.elu(samples[0])
+        torch.testing.assert_close(out, samples[-1])
+
+    def _opcheck(self, device, sizes=[10, 20, 30]):
+        # Use opcheck to check for incorrect usage of operator registration APIs
+        test_utils = [
+            "test_schema",
+            "test_autograd_registration",
+            "test_faketensor",
+            # "test_aot_dispatch_dynamic",
+        ]
+        for size in sizes:
+            args = self.sample_inputs(size, device)
+            opcheck(torch.ops.hpco.elu.default, [args[0]], test_utils=test_utils)
 
     def test_opcheck_cpu(self):
         self._opcheck("cpu")

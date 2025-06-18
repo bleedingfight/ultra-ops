@@ -1,4 +1,4 @@
-#include "unary_ops.h"
+#include "unary_ops_cpu.h"
 namespace hpco {
 at::Tensor elu_cpu(const at::Tensor &a) {
     TORCH_INTERNAL_ASSERT(a.device().type() == at::DeviceType::CPU);
