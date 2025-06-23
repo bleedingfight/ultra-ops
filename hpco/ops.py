@@ -9,11 +9,6 @@ def mymuladd(a: Tensor, b: Tensor, c: float) -> Tensor:
     return torch.ops.hpco.mymuladd.default(a, b, c)
 
 
-def elu(a: Tensor) -> Tensor:
-    """Performs a * b + c in an efficient fused kernel"""
-    return torch.ops.hpco.elu.default(a)
-
-
 # Registers a FakeTensor kernel (aka "meta kernel", "abstract impl")
 # that describes what the properties of the output Tensor are given
 # the properties of the input Tensor. The FakeTensor kernel is necessary
@@ -73,3 +68,8 @@ def myadd_out(a: Tensor, b: Tensor, out: Tensor) -> None:
 def _(a):
     torch._check(a.dtype == torch.float)
     return torch.empty_like(a)
+
+
+def elu(a: Tensor) -> Tensor:
+    """Performs a * b + c in an efficient fused kernel"""
+    return torch.ops.hpco.elu.default(a)

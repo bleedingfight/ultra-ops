@@ -1,5 +1,5 @@
-#include "binary_ops_cpu.h"
-#include "unary_ops_cpu.h"
+#include "cpu/binary_ops_cpu.h"
+#include "cpu/unary_ops_cpu.h"
 extern "C" {
 /* Creates a dummy empty _C module that can be imported from Python.
    The import from Python will load the .so consisting of this file
