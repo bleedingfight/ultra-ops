@@ -27,7 +27,12 @@ at::Tensor elu_cuda(const at::Tensor &a) {
     const float *a_ptr = a_cont.data_ptr<float>();
     float *result_ptr = out.data_ptr<float>();
     int numel = a_cont.numel();
-    elu_kernel_fp32<<<(numel + 255) / 256, 256>>>(result_ptr, a_ptr, numel);
+    elu_kernel_fp32<<<(numel + 255) / 256, 256,256*sizeof(float)>>>(result_ptr, a_ptr, numel);
+
+
+
+
+
     return out;
 }
 
